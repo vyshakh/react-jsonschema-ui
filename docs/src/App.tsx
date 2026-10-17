@@ -64,7 +64,7 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
         </Button>
       </XStack>
 
-      <XStack flex={1} flexWrap="wrap" alignItems="flex-start">
+      <XStack flexGrow={1} flexWrap="wrap" alignItems="flex-start">
         <YStack
           width={200}
           padding="$3"
