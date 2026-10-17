@@ -1,0 +1,21 @@
+packages:
+  - packages/*
+  - docs
+  - example
+
+allowBuilds:
+  esbuild: true
+
+# Expo/Metro does not follow pnpm's symlinked node_modules reliably.
+nodeLinker: hoisted
+
+# One React and one React Native for the whole workspace: RN requires the exact React
+# its renderer was built for (Expo SDK 57 / RN 0.86 -> React 19.2.3), and packages that
+# peer on react-native must not pull in their own copy.
+overrides:
+  react: 19.2.3
+  react-dom: 19.2.3
+  react-native: 0.86.3
+  # Native modules must exist once per app; @tamagui/config otherwise nests newer copies.
+  react-native-reanimated: 4.5.1
+  react-native-worklets: 0.10.1

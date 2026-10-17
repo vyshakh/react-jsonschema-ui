@@ -1,0 +1,23 @@
+{
+  "name": "@react-jsonschema-ui/samples",
+  "private": true,
+  "description": "Sample schemas shared by the docs playground and the Expo example.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-jsonschema-ui": "workspace:*",
+    "tamagui": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.12",
+    "react-jsonschema-ui": "workspace:*",
+    "tamagui": "2.7.7",
+    "typescript": "^5.9.2"
+  }
+}
