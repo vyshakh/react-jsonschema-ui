@@ -76,8 +76,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepack": "cp ../../README.md ../../LICENSE . && pnpm run build",
-    "postpack": "rm -f README.md LICENSE"
+    "prepack": "cp ../../README.md ../../LICENSE . && pnpm run build"
   },
   "dependencies": {
     "ajv": "^8.17.1",

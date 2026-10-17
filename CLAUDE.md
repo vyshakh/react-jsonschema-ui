@@ -79,5 +79,6 @@ unscoped `react-schema-ui` belongs to someone else). Layers depend only on earli
 ## Releasing
 
 `pnpm --filter react-jsonschema-ui publish` — `prepack` copies the root README/LICENSE into the
-package and builds; `postpack` removes the copies. Docs deploy via `.github/workflows/docs.yml` on
+package (gitignored there; don't delete them in `postpack`, pnpm collects files after it runs) and
+builds. Docs deploy via `.github/workflows/docs.yml` on
 pushes to `main` (Pages source must be "GitHub Actions").
