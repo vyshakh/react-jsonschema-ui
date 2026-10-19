@@ -4,9 +4,8 @@
 [![license](https://img.shields.io/npm/l/react-jsonschema-ui)](./LICENSE)
 
 JSON Schema forms for **React Native (iOS / Android via Expo)** and **React on the web**, from one
-component. Inspired by [react-jsonschema-form](https://rjsf-team.github.io/react-jsonschema-form/),
-rendered with [Tamagui](https://tamagui.dev), with state in [Zustand](https://zustand.docs.pmnd.rs)
-and validation by [Ajv](https://ajv.js.org).
+component. Rendered with [Tamagui](https://tamagui.dev), with state in
+[Zustand](https://zustand.docs.pmnd.rs) and validation by [Ajv](https://ajv.js.org).
 
 **[Live playground →](https://vyshakh.github.io/react-jsonschema-ui/)**
 
@@ -220,6 +219,15 @@ pnpm --filter example start   # Expo dev server
 
 The playground and the Expo app compile the library from source, so changes show up without a
 rebuild.
+
+## Author
+
+Hi there! I'm [Vyshakh Parakkat](https://www.linkedin.com/in/vyshakhparakkat/). My expertise lies in
+crafting robust solutions using React Native, ReactJS, Kubernetes and Python.
+
+If you have any questions, suggestions, or just want to connect, feel free to reach out.
+
+Happy coding! 🚀
 
 ## License
 

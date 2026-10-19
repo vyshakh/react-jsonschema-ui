@@ -1,7 +1,15 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["**", "!**/dist", "!**/node_modules", "!**/.turbo", "!**/.expo", "!example/assets"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/.turbo",
+      "!**/.expo",
+      "!example/assets",
+      "!example/expo-env.d.ts"
+    ]
   },
   "formatter": {
     "indentStyle": "space",
