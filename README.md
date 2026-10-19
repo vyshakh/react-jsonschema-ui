@@ -9,6 +9,13 @@ component. Rendered with [Tamagui](https://tamagui.dev), with state in
 
 **[Live playground →](https://vyshakh.github.io/react-jsonschema-ui/)**
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/vyshakh/react-jsonschema-ui/main/screenshots/home.png" width="200" alt="Sample list in the Expo app on iOS">
+  <img src="https://raw.githubusercontent.com/vyshakh/react-jsonschema-ui/main/screenshots/widgets.png" width="200" alt="Widgets sample on iOS">
+  <img src="https://raw.githubusercontent.com/vyshakh/react-jsonschema-ui/main/screenshots/enums.png" width="200" alt="Enums sample on iOS">
+  <img src="https://raw.githubusercontent.com/vyshakh/react-jsonschema-ui/main/screenshots/validations.png" width="200" alt="Validation errors on iOS">
+</p>
+
 - **Universal** — the same `<SchemaForm>` runs on iOS, Android and the web.
 - **Fast** — each field subscribes to its own slice of state; typing in one field never
   re-renders another.
