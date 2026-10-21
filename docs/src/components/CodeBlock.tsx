@@ -38,24 +38,24 @@ export function CodeBlock({
       flex={1}
       minHeight={0}
       borderWidth={1}
-      borderColor={error ? '$red8' : '$borderColor'}
-      borderRadius="$4"
+      borderColor={error ? 'red8' : 'border-color'}
+      borderRadius="4"
       overflow="hidden"
     >
       <XStack
-        paddingHorizontal="$3"
-        paddingVertical="$2"
+        paddingHorizontal="3"
+        paddingVertical="2"
         alignItems="center"
-        gap="$2"
-        backgroundColor="$color2"
+        gap="2"
+        backgroundColor="color2"
         borderBottomWidth={1}
-        borderColor="$borderColor"
+        borderColor="border-color"
       >
-        <SizableText size="$3" fontWeight="600" flex={1}>
+        <SizableText size="3" fontWeight="600" flex={1}>
           {label}
         </SizableText>
         {error ? (
-          <SizableText size="$2" theme="red" color="$color10" numberOfLines={1} flexShrink={1}>
+          <SizableText size="2" theme="red" color="color10" numberOfLines={1} flexShrink={1}>
             {error}
           </SizableText>
         ) : (

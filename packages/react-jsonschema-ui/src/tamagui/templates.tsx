@@ -15,7 +15,7 @@ const INLINE_LABEL_WIDGETS = new Set(['checkbox', 'switch']);
 
 export function FormTemplate({ children, onSubmit }: FormTemplateProps) {
   return (
-    <Form onSubmit={onSubmit} gap="$4">
+    <Form onSubmit={onSubmit} gap="4">
       {children}
     </Form>
   );
@@ -33,13 +33,13 @@ export function FieldTemplate({
 }: FieldTemplateProps) {
   const showLabel = label !== undefined && !INLINE_LABEL_WIDGETS.has(node.widget);
   return (
-    <YStack gap="$1.5">
+    <YStack gap="1-5">
       {showLabel && <FieldLabel htmlFor={id} label={label} required={required} />}
       {description !== undefined && <Description text={description} />}
       {children}
       <Errors id={id} errors={errors} />
       {help !== undefined && (
-        <SizableText size="$2" color="$color10">
+        <SizableText size="2" color="placeholder-color">
           {help}
         </SizableText>
       )}
@@ -57,16 +57,16 @@ export function ObjectTemplate({
   const nested = pointer !== '';
   return (
     <YStack
-      gap="$3"
+      gap="3"
       {...(nested && {
         borderWidth: 1,
-        borderColor: '$borderColor',
-        borderRadius: '$4',
-        padding: '$3',
+        borderColor: 'border-color',
+        borderRadius: '4',
+        padding: '3',
       })}
     >
       {title !== undefined && (
-        <SizableText size={nested ? '$5' : '$7'} fontWeight="600">
+        <SizableText size={nested ? '5' : '7'} fontWeight="600">
           {title}
         </SizableText>
       )}
@@ -89,9 +89,9 @@ export function ArrayTemplate({
   onAdd,
 }: ArrayTemplateProps) {
   return (
-    <YStack gap="$2">
+    <YStack gap="2">
       {title !== undefined && (
-        <SizableText size="$5" fontWeight="600">
+        <SizableText size="5" fontWeight="600">
           {title}
         </SizableText>
       )}
@@ -100,7 +100,7 @@ export function ArrayTemplate({
       <Errors id={id} errors={errors} />
       {canAdd && (
         <Button
-          size="$3"
+          size="sm"
           alignSelf="flex-start"
           onPress={onAdd}
           aria-label={`Add item to ${title ?? id}`}
@@ -124,13 +124,13 @@ export function ArrayItemTemplate({
 }: ArrayItemTemplateProps) {
   const position = `item ${index + 1}`;
   return (
-    <XStack gap="$2" alignItems="flex-start">
+    <XStack gap="2" alignItems="flex-start">
       <YStack flex={1}>{children}</YStack>
       {(canMoveUp || canMoveDown) && (
         <>
           <Button
-            size="$3"
-            chromeless
+            size="sm"
+            variant="quiet"
             disabled={!canMoveUp}
             onPress={onMoveUp}
             aria-label={`Move ${position} up`}
@@ -138,8 +138,8 @@ export function ArrayItemTemplate({
             ↑
           </Button>
           <Button
-            size="$3"
-            chromeless
+            size="sm"
+            variant="quiet"
             disabled={!canMoveDown}
             onPress={onMoveDown}
             aria-label={`Move ${position} down`}
@@ -150,8 +150,8 @@ export function ArrayItemTemplate({
       )}
       {canRemove && (
         <Button
-          size="$3"
-          chromeless
+          size="sm"
+          variant="quiet"
           theme="red"
           onPress={onRemove}
           aria-label={`Remove ${position}`}
@@ -175,8 +175,8 @@ export function SubmitButton({ label, disabled, onSubmit }: SubmitButtonProps) {
 
 export function UnsupportedField({ pointer, reason }: UnsupportedFieldProps) {
   return (
-    <YStack theme="yellow" backgroundColor="$background" borderRadius="$3" padding="$2">
-      <SizableText size="$2" color="$color11">
+    <YStack theme="yellow" backgroundColor="background" borderRadius="3" padding="2">
+      <SizableText size="2" color="color">
         {`Unsupported field ${pointer || '(root)'}: ${reason}`}
       </SizableText>
     </YStack>
@@ -193,7 +193,7 @@ export function FieldLabel({
   required: boolean;
 }) {
   return (
-    <Label htmlFor={htmlFor} size="$3" lineHeight="$3">
+    <Label htmlFor={htmlFor} size="3">
       {required ? `${label} *` : label}
     </Label>
   );
@@ -201,7 +201,7 @@ export function FieldLabel({
 
 function Description({ text }: { text: string }) {
   return (
-    <Paragraph size="$2" color="$color10">
+    <Paragraph size="2" color="placeholder-color">
       {text}
     </Paragraph>
   );
@@ -212,7 +212,7 @@ function Errors({ id, errors }: { id: string; errors: readonly string[] | undefi
   return (
     <YStack role="alert" id={`${id}__errors`}>
       {errors.map((error) => (
-        <SizableText key={error} size="$2" theme="red" color="$color10">
+        <SizableText key={error} size="2" theme="red" color="color">
           {error}
         </SizableText>
       ))}

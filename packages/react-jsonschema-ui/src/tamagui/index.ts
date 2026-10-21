@@ -1,6 +1,11 @@
+import { createElement } from 'react';
+import { TamaguiProvider, useThemeName } from 'tamagui';
 import { headlessRegistry, mergeRegistry } from '../registry/registry';
 import type { Registry } from '../registry/types';
-import { createSchemaForm } from '../renderer/SchemaForm';
+import { createSchemaForm, type SchemaFormProps } from '../renderer/SchemaForm';
+import type { InferSchema } from '../schema/infer';
+import type { JSONSchema } from '../schema/types';
+import { getProviderConfig } from './fallbackConfig';
 import { tamaguiTemplates } from './templates';
 import { CheckboxWidget, SwitchWidget } from './widgets/boolean';
 import { CheckboxesWidget, RadioWidget, SelectWidget } from './widgets/choice';
@@ -39,11 +44,38 @@ export const tamaguiRegistry: Registry = mergeRegistry(headlessRegistry, {
   templates: tamaguiTemplates,
 });
 
+const TamaguiSchemaForm = createSchemaForm(tamaguiRegistry);
+
 /**
- * `<SchemaForm>` rendered with Tamagui. Render it inside your app's
- * `<TamaguiProvider>`; widgets use theme tokens and follow the active theme.
+ * `<SchemaForm>` rendered with Tamagui. Inside your app's `<TamaguiProvider>`
+ * the widgets use its tokens and follow the active theme. Outside one, the
+ * form provides its own: with your config if you called createTamagui, with a
+ * built-in default config otherwise.
  */
-export const SchemaForm = createSchemaForm(tamaguiRegistry);
+export function SchemaForm<S extends JSONSchema, T = InferSchema<S>>(props: SchemaFormProps<S, T>) {
+  const form = createElement(TamaguiSchemaForm<S, T>, props);
+  if (useInTamaguiProvider()) return form;
+  return createElement(
+    TamaguiProvider,
+    { config: getProviderConfig(), defaultTheme: 'light' },
+    form,
+  );
+}
+
+/**
+ * Tamagui exports no context to probe for a provider; reading the theme throws
+ * outside one. A mounted form never gains or loses its provider, so the hooks
+ * run in the same order on every render.
+ */
+function useInTamaguiProvider(): boolean {
+  try {
+    // biome-ignore lint/correctness/useHookAtTopLevel: see above.
+    useThemeName();
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 export {
   ArrayItemTemplate,

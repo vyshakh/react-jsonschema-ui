@@ -20,8 +20,8 @@ export function SampleScreen({ sample }: { sample: Sample }) {
       keyboardDismissMode="interactive"
       automaticallyAdjustKeyboardInsets
     >
-      <YStack padding="$4" gap="$5">
-        <Paragraph size="$3" color="$color10">
+      <YStack padding="4" gap="5">
+        <Paragraph size="3" color="color10">
           {sample.description}
         </Paragraph>
 
@@ -53,17 +53,17 @@ function Panel({ title, body, theme }: { title: string; body: unknown; theme?: '
   return (
     <YStack
       theme={theme ?? null}
-      backgroundColor="$color2"
-      borderRadius="$4"
+      backgroundColor="color2"
+      borderRadius="4"
       borderWidth={1}
-      borderColor="$borderColor"
-      padding="$3"
-      gap="$2"
+      borderColor="border-color"
+      padding="3"
+      gap="2"
     >
-      <SizableText size="$3" fontWeight="600" color="$color11">
+      <SizableText size="3" fontWeight="600" color="color11">
         {title}
       </SizableText>
-      <SizableText size="$2" fontFamily="$body" color="$color12" selectable>
+      <SizableText size="2" fontFamily="body" color="color12" userSelect="text">
         {JSON.stringify(body, null, 2)}
       </SizableText>
     </YStack>
@@ -72,7 +72,7 @@ function Panel({ title, body, theme }: { title: string; body: unknown; theme?: '
 
 export function NotFound({ id }: { id: string | undefined }) {
   return (
-    <YStack flex={1} padding="$4" alignItems="center" justifyContent="center">
+    <YStack flex={1} padding="4" alignItems="center" justifyContent="center">
       <Paragraph>{`No sample named "${id ?? ''}".`}</Paragraph>
     </YStack>
   );

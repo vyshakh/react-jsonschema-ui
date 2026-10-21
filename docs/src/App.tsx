@@ -48,29 +48,29 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
   };
 
   return (
-    <YStack minHeight="100vh" backgroundColor="$background">
+    <YStack minHeight="100vh" backgroundColor="background">
       <XStack
-        paddingHorizontal="$4"
-        paddingVertical="$3"
+        paddingHorizontal="4"
+        paddingVertical="3"
         alignItems="center"
-        gap="$3"
+        gap="3"
         borderBottomWidth={1}
-        borderColor="$borderColor"
+        borderColor="border-color"
         flexWrap="wrap"
       >
         <YStack flex={1} minWidth={240}>
-          <SizableText size="$6" fontWeight="700">
+          <SizableText size="6" fontWeight="700">
             react-jsonschema-ui
           </SizableText>
-          <Paragraph size="$2" color="$color10">
+          <Paragraph size="2" color="color10">
             JSON Schema forms for React Native and the web, rendered with Tamagui.
           </Paragraph>
         </YStack>
-        <Button size="$3" onPress={share}>
+        <Button size="sm" onPress={share}>
           {copied === 'link' ? 'Link copied' : 'Share'}
         </Button>
         <Button
-          size="$3"
+          size="sm"
           icon={<GitHubIcon />}
           render={
             <a
@@ -85,7 +85,7 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
         >
           GitHub
         </Button>
-        <Button size="$3" onPress={onToggleDark} aria-label="Toggle dark mode">
+        <Button size="sm" onPress={onToggleDark} aria-label="Toggle dark mode">
           {dark ? '☀︎ Light' : '☾ Dark'}
         </Button>
       </XStack>
@@ -93,10 +93,10 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
       <XStack flexGrow={1} flexWrap="wrap" alignItems="flex-start">
         <YStack
           width={200}
-          padding="$3"
-          gap="$1"
+          padding="3"
+          gap="1"
           borderRightWidth={1}
-          borderColor="$borderColor"
+          borderColor="border-color"
           $max-md={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', borderRightWidth: 0 }}
           role="navigation"
           aria-label="Samples"
@@ -106,9 +106,9 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
             return (
               <Button
                 key={sample.id}
-                size="$3"
+                size="sm"
                 justifyContent="flex-start"
-                chromeless={!active}
+                {...(!active && { variant: 'quiet' as const })}
                 theme={active ? 'accent' : null}
                 aria-current={active ? 'page' : undefined}
                 onPress={() => {
@@ -122,9 +122,9 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
           })}
         </YStack>
 
-        <YStack flex={1} minWidth={340} padding="$3" gap="$3">
+        <YStack flex={1} minWidth={340} padding="3" gap="3">
           {state.sample && (
-            <Paragraph size="$3" color="$color11">
+            <Paragraph size="3" color="color11">
               {state.sample.description}
             </Paragraph>
           )}
@@ -137,7 +137,7 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
               dark={dark}
             />
           </YStack>
-          <XStack gap="$3" height={300} $max-sm={{ flexDirection: 'column', height: 620 }}>
+          <XStack gap="3" flexDirection="row max-sm:column" height="300px max-sm:620px">
             <CodeBlock
               label="UI Schema"
               value={state.uiSchema.text}
@@ -155,12 +155,12 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
           </XStack>
         </YStack>
 
-        <YStack flex={1} minWidth={340} padding="$3" gap="$3">
-          <XStack gap="$2" role="tablist" alignItems="center" flexWrap="wrap">
+        <YStack flex={1} minWidth={340} padding="3" gap="3">
+          <XStack gap="2" role="tablist" alignItems="center" flexWrap="wrap">
             {(['form', 'code'] as const).map((id) => (
               <Button
                 key={id}
-                size="$3"
+                size="sm"
                 role="tab"
                 aria-selected={tab === id}
                 theme={tab === id ? 'accent' : null}
@@ -170,7 +170,7 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
               </Button>
             ))}
           </XStack>
-          <YStack borderWidth={1} borderColor="$borderColor" borderRadius="$4" padding="$3">
+          <YStack borderWidth={1} borderColor="border-color" borderRadius="4" padding="3">
             <OptionsPanel
               options={state.options}
               onChange={(options) => dispatch({ type: 'setOptions', options })}
@@ -188,7 +188,7 @@ export function App({ dark, onToggleDark }: { dark: boolean; onToggleDark: () =>
                 value={code}
                 dark={dark}
                 actions={
-                  <Button size="$2" onPress={() => void copy('code', code)}>
+                  <Button size="xs" onPress={() => void copy('code', code)}>
                     {copied === 'code' ? 'Copied' : 'Copy'}
                   </Button>
                 }

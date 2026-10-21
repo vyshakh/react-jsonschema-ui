@@ -7,6 +7,10 @@
       "!**/node_modules",
       "!**/.turbo",
       "!**/.expo",
+      "!**/.next",
+      "!**/next-env.d.ts",
+      "!examples/react-native/ios",
+      "!examples/react-native/android",
       "!example/assets",
       "!example/expo-env.d.ts"
     ]

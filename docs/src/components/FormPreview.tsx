@@ -64,13 +64,13 @@ export function FormPreview({ state, onFormChange }: FormPreviewProps) {
   if (built.error !== undefined) return <Problem title="Invalid schema" message={built.error} />;
 
   return (
-    <YStack gap="$4">
+    <YStack gap="4">
       <YStack
         borderWidth={1}
-        borderColor="$borderColor"
-        borderRadius="$4"
-        padding="$4"
-        backgroundColor="$background"
+        borderColor="border-color"
+        borderRadius="4"
+        padding="4"
+        backgroundColor="background"
       >
         <PreviewBoundary resetKey={built.store}>
           <SchemaForm
@@ -97,21 +97,21 @@ function LiveErrors({ store }: { store: FormStore }) {
   const errors = useStore(store, (s) => s.errors);
   const entries = Object.entries(errors);
   return (
-    <YStack gap="$1">
-      <SizableText size="$3" fontWeight="600">
+    <YStack gap="1">
+      <SizableText size="3" fontWeight="600">
         {`Visible errors (${entries.length})`}
       </SizableText>
       {entries.length === 0 ? (
-        <Paragraph size="$2" color="$color10">
+        <Paragraph size="2" color="color10">
           None. Errors appear as fields are visited, according to the validate mode.
         </Paragraph>
       ) : (
         entries.map(([pointer, messages]) => (
-          <XStack key={pointer} gap="$2">
-            <SizableText size="$2" fontFamily="$mono" color="$color11">
+          <XStack key={pointer} gap="2">
+            <SizableText size="2" fontFamily="mono" color="color11">
               {pointer || '(root)'}
             </SizableText>
-            <SizableText size="$2" theme="red" color="$color10" flexShrink={1}>
+            <SizableText size="2" theme="red" color="color10" flexShrink={1}>
               {messages.join('; ')}
             </SizableText>
           </XStack>
@@ -126,17 +126,17 @@ function SubmissionResult({ submission }: { submission: Submission }) {
   return (
     <YStack
       theme={submission.ok ? 'green' : 'red'}
-      backgroundColor="$background"
+      backgroundColor="background"
       borderWidth={1}
-      borderColor="$borderColor"
-      borderRadius="$4"
-      padding="$3"
-      gap="$2"
+      borderColor="border-color"
+      borderRadius="4"
+      padding="3"
+      gap="2"
     >
-      <SizableText size="$3" fontWeight="600" color="$color11">
+      <SizableText size="3" fontWeight="600" color="color11">
         {submission.ok ? `Submitted at ${time}` : `Submit blocked at ${time}`}
       </SizableText>
-      <SizableText size="$2" fontFamily="$mono" whiteSpace="pre-wrap" color="$color12">
+      <SizableText size="2" fontFamily="mono" whiteSpace="pre-wrap" color="color12">
         {JSON.stringify(submission.ok ? submission.values : submission.errors, null, 2)}
       </SizableText>
     </YStack>
@@ -145,11 +145,11 @@ function SubmissionResult({ submission }: { submission: Submission }) {
 
 function Problem({ title, message }: { title: string; message: string }) {
   return (
-    <YStack theme="red" backgroundColor="$background" borderRadius="$4" padding="$4" gap="$2">
-      <SizableText size="$4" fontWeight="600" color="$color11">
+    <YStack theme="red" backgroundColor="background" borderRadius="4" padding="4" gap="2">
+      <SizableText size="4" fontWeight="600" color="color11">
         {title}
       </SizableText>
-      <SizableText size="$2" fontFamily="$mono" color="$color11">
+      <SizableText size="2" fontFamily="mono" color="color11">
         {message}
       </SizableText>
     </YStack>

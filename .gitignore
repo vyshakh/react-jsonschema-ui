@@ -8,3 +8,5 @@ coverage
 # Copied from the repo root at pack time.
 packages/react-jsonschema-ui/README.md
 packages/react-jsonschema-ui/LICENSE
+.next
+next-env.d.ts
