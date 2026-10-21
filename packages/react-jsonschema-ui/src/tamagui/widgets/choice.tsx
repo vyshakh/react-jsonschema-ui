@@ -1,12 +1,15 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Adapt,
+  Button,
   Checkbox,
+  isWeb,
   Label,
   RadioGroup,
   Select,
   Sheet,
   SizableText,
+  useConfiguration,
   XStack,
   YStack,
 } from 'tamagui';
@@ -28,10 +31,18 @@ function valueAt(options: readonly EnumOption[], key: string): unknown {
 }
 
 /**
- * Popover list on web; on touch devices it adapts to a bottom sheet, since
- * Tamagui's Select renders no dropdown of its own on native.
+ * Popover list on web. Tamagui's Select renders no dropdown of its own on
+ * native, so on touch devices it adapts to a bottom sheet. The sheet needs an
+ * animation driver in the app's Tamagui config; without one, native gets an
+ * inline list instead and touch browsers keep the popover.
  */
-export function SelectWidget({
+export function SelectWidget(props: WidgetProps) {
+  const { animationDriver } = useConfiguration();
+  if (!isWeb && !animationDriver) return <InlineSelect {...props} />;
+  return <SheetSelect {...props} sheet={animationDriver != null} />;
+}
+
+function SheetSelect({
   id,
   value,
   onChange,
@@ -41,7 +52,8 @@ export function SelectWidget({
   disabled,
   readOnly,
   label,
-}: WidgetProps) {
+  sheet,
+}: WidgetProps & { sheet: boolean }) {
   const options = enumOptions ?? [];
   const onValueChange = useCallback(
     (key: string) => {
@@ -62,22 +74,25 @@ export function SelectWidget({
         <Select.Value placeholder={placeholder ?? 'Select…'} />
       </Select.Trigger>
 
-      <Adapt platform="touch">
-        <Sheet modal dismissOnSnapToBottom snapPointsMode="fit">
-          <Sheet.Frame>
-            <Sheet.ScrollView>
-              <Adapt.Contents />
-            </Sheet.ScrollView>
-          </Sheet.Frame>
-          <Sheet.Overlay />
-        </Sheet>
-      </Adapt>
+      {sheet && (
+        <Adapt platform="touch">
+          <Sheet modal dismissOnSnapToBottom snapPointsMode="fit">
+            <Sheet.Container>
+              <Sheet.Background />
+              <Sheet.ScrollView>
+                <Adapt.Contents />
+              </Sheet.ScrollView>
+            </Sheet.Container>
+            <Sheet.Overlay />
+          </Sheet>
+        </Adapt>
+      )}
 
       <Select.Content>
         <Select.Viewport minWidth={200}>
           <Select.Group>
             {options.map((option, index) => (
-              <Select.Item key={option.label} index={index} value={String(index)}>
+              <Select.Item key={option.label} value={String(index)}>
                 <Select.ItemText>{option.label}</Select.ItemText>
                 <Select.ItemIndicator marginLeft="auto">
                   <SizableText>✓</SizableText>
@@ -88,6 +103,59 @@ export function SelectWidget({
         </Select.Viewport>
       </Select.Content>
     </Select>
+  );
+}
+
+/** A trigger that expands the options in place: needs no portal, sheet or animations. */
+function InlineSelect({
+  id,
+  value,
+  onChange,
+  onBlur,
+  enumOptions,
+  placeholder,
+  disabled,
+  readOnly,
+  label,
+}: WidgetProps) {
+  const options = enumOptions ?? [];
+  const [open, setOpen] = useState(false);
+  const selected = options.find((option) => Object.is(option.value, value));
+  const choose = (option: EnumOption) => {
+    setOpen(false);
+    onChange(option.value);
+    onBlur();
+  };
+  return (
+    <YStack gap="1">
+      <Button
+        id={id}
+        variant="outlined"
+        justifyContent="flex-start"
+        disabled={disabled || readOnly}
+        onPress={() => setOpen((was) => !was)}
+        aria-label={label}
+        aria-expanded={open}
+      >
+        {selected?.label ?? placeholder ?? 'Select…'}
+      </Button>
+      {open && (
+        <YStack role="radiogroup" borderWidth={1} borderColor="border-color" borderRadius="4">
+          {options.map((option) => (
+            <Button
+              key={option.label}
+              role="radio"
+              aria-checked={option === selected}
+              variant="quiet"
+              justifyContent="space-between"
+              onPress={() => choose(option)}
+            >
+              {option === selected ? `${option.label}  ✓` : option.label}
+            </Button>
+          ))}
+        </YStack>
+      )}
+    </YStack>
   );
 }
 
@@ -117,15 +185,15 @@ export function RadioWidget({
       onValueChange={onValueChange}
       disabled={disabled || readOnly}
     >
-      <Stack gap="$2" flexWrap="wrap">
+      <Stack gap="2" flexWrap="wrap">
         {options.map((option, index) => {
           const itemId = `${id}__${index}`;
           return (
-            <XStack key={option.label} gap="$2" alignItems="center">
-              <RadioGroup.Item id={itemId} value={String(index)} size="$3">
+            <XStack key={option.label} gap="2" alignItems="center">
+              <RadioGroup.Item id={itemId} value={String(index)} size="sm">
                 <RadioGroup.Indicator />
               </RadioGroup.Item>
-              <Label htmlFor={itemId} size="$3">
+              <Label htmlFor={itemId} size="3">
                 {option.label}
               </Label>
             </XStack>
@@ -159,23 +227,23 @@ export function CheckboxesWidget({
   };
   const Stack = uiOptions.inline === true ? XStack : YStack;
   return (
-    <Stack id={id} gap="$2" flexWrap="wrap">
+    <Stack id={id} gap="2" flexWrap="wrap">
       {options.map((option, index) => {
         const itemId = `${id}__${index}`;
         return (
-          <XStack key={option.label} gap="$2" alignItems="center">
+          <XStack key={option.label} gap="2" alignItems="center">
             <Checkbox
               id={itemId}
-              size="$4"
+              size="md"
               checked={selected.has(option.value)}
               onCheckedChange={(checked) => toggle(option, checked === true)}
               disabled={disabled || readOnly}
             >
               <Checkbox.Indicator>
-                <SizableText size="$3">✓</SizableText>
+                <SizableText size="3">✓</SizableText>
               </Checkbox.Indicator>
             </Checkbox>
-            <Label htmlFor={itemId} size="$3">
+            <Label htmlFor={itemId} size="3">
               {option.label}
             </Label>
           </XStack>

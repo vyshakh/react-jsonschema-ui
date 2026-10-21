@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "docs", "dev", "--port", "5173", "--strictPort"],
+      "port": 5173
+    },
+    {
+      "name": "nextjs",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "example-nextjs", "start", "--port", "3000"],
+      "port": 3000
+    },
+    {
+      "name": "nextjs-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "example-nextjs", "dev", "--port", "3001"],
+      "port": 3001
+    },
+    {
+      "name": "rn-metro",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "example-react-native", "start"],
+      "port": 8081
+    }
+  ]
+}

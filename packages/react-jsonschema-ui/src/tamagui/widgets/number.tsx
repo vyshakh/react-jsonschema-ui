@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Input, SizableText, Slider, XStack } from 'tamagui';
 import type { WidgetProps } from '../../registry/types';
+import { INVALID_BORDER_COLOR } from './text';
 
 /**
  * Keeps the typed text locally so intermediate input ("-", "1.", "") survives
@@ -45,9 +46,9 @@ export function NumberWidget({
       autoFocus={autofocus}
       {...(placeholder !== undefined && {
         placeholder,
-        placeholderTextColor: '$placeholderColor' as const,
+        placeholderTextColor: 'placeholder-color' as const,
       })}
-      {...(invalid && { 'aria-invalid': true, borderColor: '$red8' as const })}
+      {...(invalid && { 'aria-invalid': true, borderColor: INVALID_BORDER_COLOR })}
     />
   );
 }
@@ -68,7 +69,7 @@ export function RangeWidget({
   const current = value ?? minimum;
   const onValueChange = useCallback((values: number[]) => onChange(values[0]), [onChange]);
   return (
-    <XStack gap="$3" alignItems="center">
+    <XStack gap="3" alignItems="center">
       <Slider
         id={id}
         flex={1}
@@ -84,9 +85,9 @@ export function RangeWidget({
         <Slider.Track>
           <Slider.TrackActive />
         </Slider.Track>
-        <Slider.Thumb index={0} circular size="$1" />
+        <Slider.Thumb index={0} circular size="xs" />
       </Slider>
-      <SizableText size="$3" minWidth="$3" textAlign="right">
+      <SizableText size="3" minWidth="3" textAlign="right">
         {value === undefined ? '–' : String(value)}
       </SizableText>
     </XStack>

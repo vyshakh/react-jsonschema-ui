@@ -3,8 +3,8 @@
 [![npm](https://img.shields.io/npm/v/react-jsonschema-ui)](https://www.npmjs.com/package/react-jsonschema-ui)
 [![license](https://img.shields.io/npm/l/react-jsonschema-ui)](./LICENSE)
 
-JSON Schema forms for **React Native (iOS / Android via Expo)** and **React on the web**, from one
-component. Rendered with [Tamagui](https://tamagui.dev), with state in
+JSON Schema forms for **React Native** (bare or Expo, iOS / Android) and **React on the web**
+(Next.js, Vite or any React app), from one component. Rendered with [Tamagui](https://tamagui.dev), with state in
 [Zustand](https://zustand.docs.pmnd.rs) and validation by [Ajv](https://ajv.js.org).
 
 **[Live playground →](https://vyshakh.github.io/react-jsonschema-ui/)**
@@ -16,7 +16,7 @@ component. Rendered with [Tamagui](https://tamagui.dev), with state in
   <img src="https://raw.githubusercontent.com/vyshakh/react-jsonschema-ui/main/screenshots/validations.png" width="200" alt="Validation errors on iOS">
 </p>
 
-- **Universal** — the same `<SchemaForm>` runs on iOS, Android and the web.
+- **Universal** — the same `<SchemaForm>` runs on iOS, Android and the web, with no build plugins.
 - **Fast** — each field subscribes to its own slice of state; typing in one field never
   re-renders another.
 - **Typed** — values are inferred from `as const` schemas; uiSchema keys and custom widget values
@@ -30,12 +30,20 @@ component. Rendered with [Tamagui](https://tamagui.dev), with state in
 npm install react-jsonschema-ui tamagui
 ```
 
-Your app provides `react` (19+ when using the Tamagui widgets), `tamagui` (^2.7) and, on native,
-`react-native` / Expo. Ajv, ajv-formats and Zustand come with the package.
+| Your app | Also install |
+| --- | --- |
+| Expo | `npx expo install react-native-safe-area-context` (already there in Expo Router apps) |
+| React Native CLI | `npm install react-native-safe-area-context`, then `cd ios && pod install` |
+| Next.js, Vite, other React web apps | nothing else |
+
+Requirements: React 19 and Tamagui ^3.1 (`npm install tamagui` gets it). Native builds are tested on
+React Native 0.86 (bare and Expo SDK 57). Tamagui imports `react-native-safe-area-context` on native, which is
+why it is needed there. Ajv, ajv-formats and Zustand come with the package. No Babel, Metro, Vite or
+Next.js plugin is needed, and the web does not need `react-native-web`.
 
 ## Quick start
 
-Render `<SchemaForm>` inside your app's `<TamaguiProvider>`:
+This works as pasted, on every platform:
 
 ```tsx
 import { SchemaForm, type UiSchema } from 'react-jsonschema-ui';
@@ -67,6 +75,10 @@ export function SignUp() {
   );
 }
 ```
+
+With no Tamagui setup in the app, `<SchemaForm>` renders with a built-in default theme. To use your own
+tokens, themes and dark mode, set up Tamagui (see [Setup by platform](#setup-by-platform)) and the
+form follows it.
 
 `<SchemaForm>` is uncontrolled: `initialValues` (merged with schema `default`s) are read when the
 form is created. Keep `schema` and `uiSchema` referentially stable (module constants or `useMemo`) —
@@ -136,7 +148,7 @@ function RatingWidget({ value, onChange, onBlur, node }: WidgetProps<number | un
   return (
     <XStack>
       {Array.from({ length: max }, (_, i) => (
-        <Button key={i} chromeless onPress={() => { onChange(i + 1); onBlur(); }}>
+        <Button key={i} variant="quiet" onPress={() => { onChange(i + 1); onBlur(); }}>
           {i < (value ?? 0) ? '★' : '☆'}
         </Button>
       ))}
@@ -180,13 +192,88 @@ Or skip the renderer and use the store and hooks directly — `createFormStore`,
 `useArrayField(pointer)` and `useFormSelector` — with fields addressed by JSON Pointer
 (`/address/city`, `/tasks/0/title`).
 
-## Tamagui setup notes
+## Setup by platform
 
-- Widgets use theme tokens (`$background`, `$borderColor`, `$color10`, `$placeholderColor`) and
-  follow your app's light/dark themes. The defaults from `@tamagui/config` work out of the box.
-- The `@tamagui/config/v5` preset only allows shorthand style props *in its types*. The library
-  uses longhand props (they work with every config); if you type-check this package's source,
-  set `settings: { ...defaultConfig.settings, onlyAllowShorthands: false }`.
+### React Native and Expo
+
+Zero setup works. To theme the form, create a Tamagui config and wrap your app:
+
+```tsx
+// tamagui.config.ts
+import { defaultConfig } from '@tamagui/config/v6';
+import { animations } from '@tamagui/config/animations-rn';
+import { createTamagui } from 'tamagui';
+
+export const config = createTamagui({ ...defaultConfig, animations });
+```
+
+```tsx
+// App.tsx
+import { useColorScheme } from 'react-native';
+import { TamaguiProvider } from 'tamagui';
+import { config } from './tamagui.config';
+
+export default function App() {
+  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  return (
+    <TamaguiProvider config={config} defaultTheme={scheme}>
+      {/* screens with <SchemaForm> */}
+    </TamaguiProvider>
+  );
+}
+```
+
+`npm install @tamagui/config` at the same version as `tamagui`. The `animations` driver is
+optional. With one, `select` opens a bottom sheet; without one, it expands its options inline.
+`@tamagui/config/animations-rn` uses React Native's Animated API and needs no native module. If
+your Expo app also runs on the web, export `animations-css` from an `animations.ts` and
+`animations-rn` from an `animations.native.ts`, because the React Native driver throws on web.
+
+### Next.js (App Router)
+
+Tamagui components use React context, so render `<SchemaForm>` from a `'use client'` file. It
+takes callbacks such as `onSubmit`, which a client component needs anyway. A server component can
+render that client component:
+
+```tsx
+// app/Providers.tsx
+'use client';
+import { animations } from '@tamagui/config/animations-css';
+import { defaultConfig } from '@tamagui/config/v6';
+import { createTamagui, TamaguiProvider } from 'tamagui';
+
+const config = createTamagui({ ...defaultConfig, animations });
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <TamaguiProvider config={config} defaultTheme="light">
+      {children}
+    </TamaguiProvider>
+  );
+}
+```
+
+Wrap `{children}` in `app/layout.tsx` with `<Providers>`. Tamagui injects its CSS during server
+rendering, and light/dark follow `prefers-color-scheme`. No `next.config` changes are needed.
+
+### Vite and other React web apps
+
+Same as Next.js without the `'use client'`: wrap the app in `<TamaguiProvider>`, or use zero setup.
+
+## Tamagui notes
+
+- Supported: Tamagui 3 (`^3.1`). Tamagui 2 is not supported: v3 changed token syntax and component
+  props.
+- Widgets read only theme keys that every Tamagui 3 config pack defines: `background`,
+  `border-color`, `color` and `placeholder-color`, plus the `accent`, `red` and `yellow` sub-themes
+  (Tamagui's own Switch, Checkbox and RadioGroup also use `brand` for their checked state).
+  Spacing and font sizes use the numeric tokens (`2`, `3`, …) and controls use the named sizes
+  (`sm`, `md`). Custom configs need these too.
+- Without a `<TamaguiProvider>` around it, `<SchemaForm>` provides one itself, using your config
+  if `createTamagui` has run and the built-in one otherwise.
+- The `@tamagui/config` packs only allow shorthand style props *in their types*. The library uses
+  longhand props, which work under every config. To write longhands in your own code too, set
+  `settings: { ...defaultConfig.settings, onlyAllowShorthands: false }`.
 
 ## JSON Schema support
 
@@ -213,6 +300,8 @@ This is a pnpm + Turborepo monorepo:
 | `packages/samples` | sample schemas shared by the playground and the app |
 | `docs` | Vite playground, deployed to GitHub Pages |
 | `example` | Expo (SDK 57) app showing every sample on iOS / Android |
+| `examples/nextjs` | Next.js App Router app with a `TamaguiProvider` in the root layout |
+| `examples/react-native` | React Native CLI app with no Tamagui setup at all |
 
 ```sh
 pnpm install
@@ -222,10 +311,14 @@ pnpm lint
 pnpm build
 pnpm docs        # playground at http://localhost:5173
 pnpm --filter example start   # Expo dev server
+pnpm --filter example-nextjs dev
+pnpm --filter example-react-native start   # then `pnpm --filter example-react-native ios`
 ```
 
 The playground and the Expo app compile the library from source, so changes show up without a
-rebuild.
+rebuild. The Next.js and React Native examples use the built `dist`, as an installed copy would, so
+run `pnpm build` first. The React Native example needs `pnpm --filter example-react-native pods`
+once before its first iOS build.
 
 ## Author
 

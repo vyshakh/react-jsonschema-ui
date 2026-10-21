@@ -23,20 +23,20 @@ export function CheckboxWidget({
     [onChange, onBlur],
   );
   return (
-    <XStack gap="$2" alignItems="center">
+    <XStack gap="2" alignItems="center">
       <Checkbox
         id={id}
-        size="$4"
+        size="md"
         checked={value === true}
         onCheckedChange={onCheckedChange}
         disabled={disabled || readOnly}
       >
         <Checkbox.Indicator>
-          <SizableText size="$3">✓</SizableText>
+          <SizableText size="3">✓</SizableText>
         </Checkbox.Indicator>
       </Checkbox>
       {label !== undefined && (
-        <Label htmlFor={id} size="$3">
+        <Label htmlFor={id} size="3">
           {required ? `${label} *` : label}
         </Label>
       )}
@@ -62,10 +62,10 @@ export function SwitchWidget({
     [onChange, onBlur],
   );
   return (
-    <XStack gap="$3" alignItems="center">
+    <XStack gap="3" alignItems="center">
       <Switch
         id={id}
-        size="$3"
+        size="sm"
         checked={value === true}
         onCheckedChange={onCheckedChange}
         disabled={disabled || readOnly}
@@ -73,7 +73,7 @@ export function SwitchWidget({
         <Switch.Thumb />
       </Switch>
       {label !== undefined && (
-        <Label htmlFor={id} size="$3">
+        <Label htmlFor={id} size="3">
           {required ? `${label} *` : label}
         </Label>
       )}

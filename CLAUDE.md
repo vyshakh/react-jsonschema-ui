@@ -54,13 +54,27 @@ unscoped `react-schema-ui` belongs to someone else). Layers depend only on earli
   subscribes only to its own store slices — tests assert sibling fields don't re-render.
   `createSchemaForm(baseRegistry)` builds a `<SchemaForm>`; the registry is merged per form from
   `widgets` / `fields` / `templates` overrides. Headless templates render fragments only.
-- **Tamagui widgets** use longhand style props (they work under any Tamagui config; shorthands
-  only exist if the app's config defines them). Tamagui is pinned to **2.x** (`^2.7.0` peer);
-  3.x has a different API. Widget value conversions that matter: number widget keeps partial text
-  locally (no `type="number"`), date-time/time widgets emit RFC 3339 strings Ajv accepts.
+- **Tamagui widgets** target Tamagui **3.x** (`^3.1.0` peer; 2.x is not supported). They use
+  longhand style props, bare token names (`gap="2"`, never `$2`), named control sizes
+  (`sm`/`md`) and only theme keys every v3 config pack has (`background`, `border-color`,
+  `color`, `placeholder-color`, sub-themes `accent`/`red`/`yellow`; Tamagui's checked
+  Switch/Checkbox/Radio skins use `brand`, so the fallback config defines it) — `configV6.test.tsx` and
+  `tamagui.test.tsx` (v5 pack) guard this. Bare numbers inside style strings are token names
+  (`"300px max-sm:620px"`, not `"300 …"`). Widget value conversions that matter: number widget
+  keeps partial text locally (no `type="number"`), date-time/time widgets emit RFC 3339 strings
+  Ajv accepts.
+- **Zero setup.** The Tamagui `SchemaForm` (`tamagui/index.ts`) wraps itself in a
+  `TamaguiProvider` when it is not inside one (detected by `useThemeName()` throwing), using the
+  app's config if `createTamagui` ran, else `tamagui/fallbackConfig.ts`. The fallback is built
+  from `tamagui` alone — never depend on `@tamagui/config` (it pins exact `@tamagui/*` versions
+  and would duplicate core). `select` needs an animation driver for its sheet; without one it is
+  an inline list on native and a popover on web.
 
 ## Workspace conventions
 
+- `examples/nextjs` and `examples/react-native` (bare RN CLI, zero Tamagui setup) consume the
+  built `dist` like an installed copy — `pnpm build` first; RN needs `pnpm --filter
+  example-react-native pods` before iOS builds. Tamagui only in `'use client'` files in Next.
 - `docs/` and `example/` compile the library from source through the custom export condition
   `@react-jsonschema-ui/source` (Vite `resolve.conditions`, Metro `unstable_conditionNames`,
   TS `customConditions`). No rebuild is needed while developing.
@@ -69,8 +83,9 @@ unscoped `react-schema-ui` belongs to someone else). Layers depend only on earli
 - `pnpm-workspace.yaml` pins `react`/`react-dom` 19.2.3, `react-native` 0.86.3, Reanimated and
   Worklets workspace-wide. Expo SDK 57 needs exactly these; duplicates break hooks or native
   builds. Change them only together with an Expo SDK upgrade, and re-run `expo-doctor`.
-- In `example/`, add packages with `npx expo install` (except `tamagui`/`@tamagui/*`, which must
-  stay on 2.7.x — `expo install` would pick 3.x).
+- In `example/`, add packages with `npx expo install`. Keep `tamagui` and every `@tamagui/*` on
+  the same exact version across the workspace. The Expo app splits `animations.ts` (CSS, web) /
+  `animations.native.ts` (RN driver), since Tamagui 3's RN driver throws on web.
 - Library tests that render Tamagui run in jsdom with `react-native` aliased to `react-native-web`
   (`vitest.config.ts`) and stubs in `vitest.setup.ts`. jsdom's "Could not parse CSS stylesheet"
   output is noise.

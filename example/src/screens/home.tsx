@@ -18,8 +18,8 @@ export function Home() {
 
 function Intro() {
   return (
-    <YStack paddingHorizontal="$4" paddingTop="$3" paddingBottom="$4">
-      <Paragraph size="$3" color="$color10">
+    <YStack paddingHorizontal="4" paddingTop="3" paddingBottom="4">
+      <Paragraph size="3" color="color10">
         JSON Schema forms rendered with Tamagui. The same samples power the web playground.
       </Paragraph>
     </YStack>
@@ -32,21 +32,21 @@ function SampleRow({ sample }: { sample: Sample }) {
       <Pressable accessibilityRole="link" accessibilityLabel={sample.title}>
         {({ pressed }) => (
           <XStack
-            paddingHorizontal="$4"
-            paddingVertical="$3"
-            gap="$3"
+            paddingHorizontal="4"
+            paddingVertical="3"
+            gap="3"
             alignItems="center"
-            backgroundColor={pressed ? '$backgroundPress' : '$background'}
+            backgroundColor={pressed ? 'background-press' : 'background'}
           >
-            <YStack flex={1} gap="$1">
-              <SizableText size="$5" fontWeight="600">
+            <YStack flex={1} gap="1">
+              <SizableText size="5" fontWeight="600">
                 {sample.title}
               </SizableText>
-              <Paragraph size="$2" color="$color10" numberOfLines={2}>
+              <Paragraph size="2" color="color10" numberOfLines={2}>
                 {sample.description}
               </Paragraph>
             </YStack>
-            <SizableText size="$6" color="$color8">
+            <SizableText size="6" color="color8">
               ›
             </SizableText>
           </XStack>
@@ -57,5 +57,5 @@ function SampleRow({ sample }: { sample: Sample }) {
 }
 
 function Separator() {
-  return <YStack height={1} marginLeft="$4" backgroundColor="$borderColor" />;
+  return <YStack height={1} marginLeft="4" backgroundColor="border-color" />;
 }

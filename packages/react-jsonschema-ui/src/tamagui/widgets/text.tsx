@@ -2,6 +2,12 @@ import { useCallback } from 'react';
 import { Input, TextArea } from 'tamagui';
 import type { Widget, WidgetProps } from '../../registry/types';
 
+/**
+ * Border of an input with errors. A literal rather than a theme key: the
+ * Tamagui config packs share no red key, and this reads on light and dark.
+ */
+export const INVALID_BORDER_COLOR = '#e5484d' as const;
+
 type InputType = 'text' | 'password' | 'email' | 'url' | 'date' | 'datetime-local' | 'time';
 
 /** Props shared by every text-like input. */
@@ -23,18 +29,18 @@ function inputProps({
     onBlur,
     ...(placeholder !== undefined && {
       placeholder,
-      placeholderTextColor: '$placeholderColor' as const,
+      placeholderTextColor: 'placeholder-color' as const,
     }),
     ...(invalid && {
       'aria-invalid': true,
       'aria-describedby': `${id}__errors`,
-      borderColor: '$red8' as const,
+      borderColor: INVALID_BORDER_COLOR,
     }),
   };
 }
 
 /**
- * Tamagui 2's Input takes web `type`s and maps them to the right native
+ * Tamagui's Input takes web `type`s and maps them to the right native
  * keyboard / secureTextEntry on iOS and Android. An empty string clears the
  * value (`undefined`), so `required` is enforced on cleared fields.
  */
